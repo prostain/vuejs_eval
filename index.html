@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>tp todo</title>
+
+</head>
+<body>
+<h1>TODO ! </h1>
+
+<div id="divTodo">
+
+    <div v-for="(i, index) in selected" :key="index">
+        {{index+1}}
+        <select @change="choise(index, index)" @input='calc'>
+            <option selected disabled value="">Choisissez</option>
+            <option v-for="(j, index2) in options" :key="index2" value='j.designation' >{{j.designation}}</option>
+        </select>
+        <input type="number" min="1" :value="i.qte" >
+        <input type="number" min="1" :value="i.pu_ht">
+        <input type="number" min="1" :value="i.tva">
+        <input type="number" min="1" :value="i.p_ht">
+        <input type="number" min="1" :value="i.p_ttc">
+        <pre @click="supp(index)">supp</pre>
+    </div>
+    <button  @click="add">Add todo</button>
+    <p>total ht :{{ht}} </p>
+    <p>total ht :{{ttc}} </p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script type="text/javascript">
+    let app = new Vue({
+        el: '#divTodo',
+        data: {
+            selected: [],
+            options:[
+                    {
+                        "id": 1,
+                        "designation": "un avion",
+                        "qte": "3",
+                        "pu_ht": 210,
+                        "tva": 20,
+                        "p_ht": 756,
+                        "p_ttc": 907.2
+                    },
+                    {
+                        "id": 2,
+                        "designation": "un bateau",
+                        "qte": "4",
+                        "pu_ht": 20,
+                        "tva": 0,
+                        "p_ht": 80,
+                        "p_ttc": 80
+                    }
+                ],
+            ht : 0,
+            ttc:0,
+        },
+        methods : {
+            add: function () {
+                this.selected.push({
+                    "id": '',
+                    "designation": "",
+                    "qte": 0,
+                    "pu_ht": 0,
+                    "tva": 0,
+                    "p_ht": 0,
+                    "p_ttc": 0});
+            },
+            supp: function (index) {
+                this.ht -= parseFloat(this.selected[index].p_ht);
+                this.ttc -= parseFloat(this.selected[index].p_ttc)
+                this.selected.splice(index, 1);
+
+                console.log(index);
+                console.log(this.selected[index]);
+            },
+            choise: function (indice , i) {
+                console.log(i + indice);
+                this.selected[i].id = this.options[indice].id;
+                this.selected[i].designation = this.options[indice].designation;
+                this.selected[i].qte = this.options[indice].qte;
+                this.selected[i].pu_ht = this.options[indice].pu_ht;
+                this.selected[i].tva = this.options[indice].tva;
+                this.selected[i].p_ht = this.options[indice].p_ht;
+                this.selected[i].p_ttc = this.options[indice].p_ttc;
+                this.ht += parseFloat(this.selected[i].p_ht);
+                this.ttc += parseFloat(this.selected[i].p_ttc)
+
+            },
+        },
+
+    });
+</script>
+
+
+</div>
+
+</body>
+</html>
